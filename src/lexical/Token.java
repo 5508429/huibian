@@ -2,8 +2,6 @@ package lexical;
 
 /**
  * 符号类，用于词法分析
- *
- * @author ZY
  */
 public class Token {
     private String sym = "";

@@ -1,4 +1,6 @@
 var x, y, z;
+const xxx=10;
+
 
 procedure test;
 var a, b, c;

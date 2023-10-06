@@ -7,7 +7,7 @@ import java.io.IOException;
 
 class SourceCodeFileReader {
 	/**
-	 * 读取源程序文件的方法，配合charAt，就成为了作业中的GETCH方法。
+	 * 读取源程序文件的方法。
 	 * @param fileName 源程序文件路径
 	 * @param lineFeed 指定换行字符
 	 * @return 返回读入的文件内容字符串
@@ -18,12 +18,11 @@ class SourceCodeFileReader {
 		StringBuffer fileStringBuffer = new StringBuffer();
 		try {
 			reader = new BufferedReader(new FileReader(file));
-			String tempStr;
-			while ((tempStr = reader.readLine()) != null) {
+			String tempStr = null;
+			while (null != (tempStr = reader.readLine())) {
 				fileStringBuffer.append(tempStr + lineFeed);
 			}
 			reader.close();
-			return fileStringBuffer.toString();
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
@@ -34,7 +33,7 @@ class SourceCodeFileReader {
 					e1.printStackTrace();
 				}
 			}
+			return fileStringBuffer.toString();
 		}
-		return fileStringBuffer.toString();
 	}
 }
