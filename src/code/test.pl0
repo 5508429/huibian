@@ -1,6 +1,5 @@
 var x, y, z;
-const xxx=10;
-
+const x:=19;
 
 procedure test;
 var a, b, c;
@@ -19,9 +18,10 @@ begin
 end;
 
 begin
+
     x := 4;
     y := 100;
-
+    read(x);
     if x < y then
     begin
         z := y / x;

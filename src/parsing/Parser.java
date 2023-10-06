@@ -19,13 +19,17 @@ public class Parser {
         gen("JMP", "0", "main");
         for (Declaration declaration : declarationList) {
             if (declaration.getKind().equals("PROCEDURE")) {
+                //帮忙封装code的方法。
                 gen("JMP", "0", declaration.getName());
             }
         }
         for (Declaration declaration : declarationList) {
             if (declaration.getKind().equals("PROCEDURE")) {
+                //这个变量用来干什么？
                 declaration.setCodeStartIndex(code.size());
+                //在栈中开辟3个数据单元
                 gen("INT", "0", "3");
+                //传入token,declaration，以及PROCEDURE的token开始行和结束行
                 parse(tokenList, declarationList, declaration.getStart(), declaration.getEnd());
                 gen("OPR", "0", "0");
             }
@@ -53,6 +57,7 @@ public class Parser {
     private static void parse(ArrayList<Token> tokenList, ArrayList<Declaration> declarationList, int startIndex, int endIndex) {
         while (tokenListIndex < endIndex) {
             switch (tokenList.get(tokenListIndex).getSym()) {
+                //处理变量 -- 声明和赋值
                 case "IDENT":
                     identParser(tokenList, declarationList);
                     break;
@@ -75,9 +80,11 @@ public class Parser {
 
     /**
      * 翻译ident，例如 x := x + y 或 x := 20
-     *
+     * 此方法用于处理两种情况，变量声明和变量赋值。
      * @param tokenList       token列表
      * @param declarationList 声明table
+     *
+     *
      */
     private static void identParser(ArrayList<Token> tokenList, ArrayList<Declaration> declarationList) {
         Token left = tokenList.get(tokenListIndex);
@@ -100,7 +107,7 @@ public class Parser {
      *
      * @param tokenList       token列表
      * @param declarationList 变量声明表
-     * @param left            := 的左半部分
+     * @param left            := 的左半部分Token对应的Declaration
      */
     private static void expressionParser(ArrayList<Token> tokenList, ArrayList<Declaration> declarationList, Declaration left) {
         Token first = getNext(tokenList);
@@ -126,6 +133,7 @@ public class Parser {
             } else {
                 PL0Error.log(10);
             }
+            //对应赋值表达式
         } else if (first != null && first.getSym().equals("NUMBER")) {
             // 如 x := 20;
             gen("LIT", "0", first.getNum());
@@ -158,10 +166,20 @@ public class Parser {
         }
     }
 
+    /**
+     * 本方法用来处理begin
+     *
+     * @param tokenList token裂变
+     * @param declarationList 声明列表
+     * @param startIndex 本次PROCEDURE的开始行数
+     */
     private static void beginParser(ArrayList<Token> tokenList, ArrayList<Declaration> declarationList, int startIndex) {
+        //这里要去找endIndex，注意不是直接找end，此PROCEDURE中可能还有一个begin、end
         int endIndex = findEnd(tokenList, tokenListIndex);
+
         while (tokenListIndex < endIndex) {
             Token next = getNext(tokenList);
+            //结束之后加入结束符
             if (next != null && next.getSym().equals("ENDSYM")) {
                 Token end = getNext(tokenList);
                 if (end != null && (end.getSym().equals("SYM_.") || end.getSym().equals("SYM_;"))) {
@@ -171,6 +189,7 @@ public class Parser {
                     PL0Error.log(14);
                 }
             } else {
+                //递归调用方法来继续读取token
                 parse(tokenList, declarationList, startIndex, endIndex);
             }
         }
