@@ -1,15 +1,19 @@
-var x, y, z;
-begin
-    read(x);
-    y := 100;
-    if x < y then
-    begin
-        z := y / x;
-        y := x + y;
-    end;
+const a:=10;
+var b,c;
 
-    while x < y do
+procedure p;
+var d;
+begin
+    c:=b+a;
+    d:=c;
+end;
+
+begin
+    read(b);
+    while b > 0 do
     begin
-        x := x + z;
+        call p;
+        read(b);
     end;
 end.
+

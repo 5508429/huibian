@@ -3,7 +3,7 @@ procedure test;
 var a, b, c;
 begin
     a := 5;
-    b := 7;
+    b := x;
     c := b * a;
 end;
 

@@ -14,6 +14,8 @@ public class Parser {
     private static int tokenListIndex = 0;  // 扫描token表用的指针
     private static ArrayList<Code> code = new ArrayList<Code>();  // 生成的output list，即为作业中的code数组
     private static int filledId = -1;  // 回填用的id
+    private static int level = 0;//记录当前的层数
+    private static int number = 0;//记录最外层变量的数目
 
     public static void init(ArrayList<Token> tokenList, ArrayList<Declaration> declarationList) {
         gen("JMP", "0", "main");
@@ -25,6 +27,7 @@ public class Parser {
         }
         for (Declaration declaration : declarationList) {
             if (declaration.getKind().equals("PROCEDURE")) {
+                level++;
                 //这个变量用来干什么？
                 declaration.setCodeStartIndex(code.size());
                 //在栈中开辟3个数据单元
@@ -32,6 +35,7 @@ public class Parser {
                 //传入token,declaration，以及PROCEDURE的token开始行和结束行
                 parse(tokenList, declarationList, declaration.getStart(), declaration.getEnd());
                 gen("OPR", "0", "0");
+                level--;
             }
         }
 
@@ -413,7 +417,11 @@ public class Parser {
         if (addressOffset.equals("")) {
             addressOffset = "0";
         }
-        Code addCode = new Code(function, levelDifference, addressOffset);
+        //更改错误使用层级信息的问题
+        if(function.equals("STO")||function.equals("LOD")){
+            levelDifference = String.valueOf(level - Integer.parseInt(levelDifference));
+        }
+        Code addCode = new Code(function,levelDifference,addressOffset);
         code.add(addCode);
     }
 
