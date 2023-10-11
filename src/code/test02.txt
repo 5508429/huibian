@@ -1,0 +1,15 @@
+var x, y, z;
+begin
+    read(x);
+    y := 100;
+    if x < y then
+    begin
+        z := y / x;
+        y := x + y;
+    end;
+
+    while x < y do
+    begin
+        x := x + z;
+    end;
+end.

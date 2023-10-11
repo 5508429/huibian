@@ -20,6 +20,9 @@ public class PL0Error {
                 "[14 begin end parse error] missing . or ;",
                 "[15 call parse error] missing call ident",
                 "[16 call parse error] missing ;",
+                "[17 write的格式不正确]",
+                "[18 输入格式错误，仅允许整数]"
+
         };
         if (errorType < error.length) {
             System.out.println(error[errorType]);

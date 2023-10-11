@@ -1,8 +1,10 @@
 package execute;
 
+import error.PL0Error;
 import parsing.Code;
 
 import java.util.ArrayList;
+import java.util.Scanner;
 
 /**
  * 执行生成的目标代码类
@@ -13,6 +15,7 @@ public class ExecuteCode {
     private static int top = 3;  // 栈顶元素位置
     private static int base = 1; // program, base, and top-stack register
     private static int programCounter = 0; // 程序计数器
+    private static Scanner mySacnner = new Scanner(System.in);//用于读
 
 
     /**
@@ -97,7 +100,7 @@ public class ExecuteCode {
      * 10: <=
      * 11: >
      * 12: >=
-     *
+     * 13: read
      * @param code 中间代码
      */
     private static void handleOperator(Code code) {
@@ -158,6 +161,13 @@ public class ExecuteCode {
             case 12:
                 top--;
                 stack[top] = (stack[top] >= stack[top + 1]) ? 1 : 0;
+            case 13:
+                System.out.println("请输入");
+                try{
+                    stack[top] = Integer.parseInt(mySacnner.nextLine());
+                }catch (Exception e){
+                    PL0Error.log(18);
+                }
         }
     }
 }

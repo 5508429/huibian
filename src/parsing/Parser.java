@@ -73,8 +73,34 @@ public class Parser {
                 case "WHILESYM":
                     whileParser(tokenList, declarationList, startIndex, endIndex);
                     break;
+                case "READSYM":
+                    readParser(tokenList,declarationList);
+                    break;
+
             }
             tokenListIndex++;
+        }
+    }
+
+    /**
+     * 对read进行处理，生成对应语句
+     */
+    private static void readParser(ArrayList<Token> tokenList, ArrayList<Declaration> declarationList){
+        Token left = getNext(tokenList);
+        Token var = getNext(tokenList);
+        Token right = getNext(tokenList);
+        Token end = getNext(tokenList);
+        if(left.getSym().equals("SYM_(")&&right.getSym().equals("SYM_)")){
+            if(end.getSym().equals("SYM_;")){
+                int index = getItemIndexInDeclarationList(var, declarationList);
+                Declaration declaration = declarationList.get(index);
+                gen("OPR","0","13");
+                gen("STO",declaration.getLevel(),declaration.getAdr());
+            }else {
+                PL0Error.log(16);
+            }
+        }else {
+            PL0Error.log(17);
         }
     }
 

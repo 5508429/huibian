@@ -13,8 +13,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class Main {
-	static String sourcePath = "/src/code/test.pl0"; // 测试代码地址
-	static String testPath = "/src/code/code.pl0code"; // 测试目标代码地址
+	private static final String sourcePath = "/src/code/test02.txt"; // 测试代码地址
+	private static final String testPath = "/src/code/code.pl0code"; // 测试目标代码地址
+
 
 	public static void main(String[] args) throws IOException {
 		//获取当前文件路径--到pl0 master
