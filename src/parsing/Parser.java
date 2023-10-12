@@ -169,7 +169,22 @@ public class Parser {
             Token equals = getNext(tokenList);
             if (equals != null && equals.getSym().equals("SYM_:=")) {
                 expressionParser(tokenList, declarationList, declarationList.get(leftIndex));
-            } else if (equals != null && !(equals.getSym().equals("SYM_,") || equals.getSym().equals("SYM_;"))) {
+            } else if("SYM_++".equals(equals.getSym())||"SYM_--".equals(equals.getSym())){
+                //处理自增和自减少（LOD 处理 STO）
+                Token end = getNext(tokenList);
+                Declaration declaration = declarationList.get(leftIndex);
+                if("SYM_;".equals(end.getSym())){
+                    gen("LOD",declaration.getLevel(),declaration.getAdr());
+                    if("SYM_++".equals(equals.getSym()))
+                        gen("OPR","0","15");
+                    else
+                        gen("OPR","0","16");
+                    gen("STO",declaration.getLevel(),declaration.getAdr());
+                }else {
+                    PL0Error.log(16);
+                }
+            }
+            else if (equals != null && !(equals.getSym().equals("SYM_,") || equals.getSym().equals("SYM_;"))) {
                 PL0Error.log(8);
             }
         } else {
@@ -178,7 +193,7 @@ public class Parser {
     }
 
     /**
-     * 处理赋值时 := 的右半部分，即处理表达式
+     * 处理赋值时 := 的右半部分，即处理表达式（这里针对完整的加减 a=b+c这种）
      * TODO：可简化代码
      *
      * @param tokenList       token列表

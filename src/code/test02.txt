@@ -5,6 +5,7 @@ var d;
 begin
     c:=b+a;
     d:=c+c;
+    d--;
     write(c);
     write(d);
 end;

@@ -102,6 +102,8 @@ public class ExecuteCode {
      * 12: >=
      * 13: read
      * 14: write
+     * 15: ++
+     * 16: --
      * @param code 中间代码
      */
     private static void handleOperator(Code code) {
@@ -175,6 +177,12 @@ public class ExecuteCode {
                 break;
             case 14:
                 System.out.println(stack[top--]);
+                break;
+            case 15:
+                stack[top]++;
+                break;
+            case 16:
+                stack[top]--;
                 break;
         }
     }
