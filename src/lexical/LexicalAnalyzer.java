@@ -16,7 +16,7 @@ public class LexicalAnalyzer {
 
     // 运算符
     private static ArrayList<String> operator = new ArrayList<String>(
-            Arrays.asList("=", "<>", "<", ">", "<=", ">=", ":=", "+", "-", "*", "/", "#","++","--"));
+            Arrays.asList("=", "<>", "<", ">", "<=", ">=", ":=", "+", "-", "*", "/", "#","++","--","+=","-=","/=","*="));
 
     // 界符
     private static ArrayList<String> delimiters = new ArrayList<String>(Arrays.asList(";", ".", ",", "(", ")"));

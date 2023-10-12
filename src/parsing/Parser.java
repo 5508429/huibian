@@ -77,7 +77,6 @@ public class Parser {
 
     /**
      * 对语句进行翻译，生成code list
-     * read和write暂时不进行处理（因为不知道怎么处理，demo中也并没有给出io相关的指令）
      *
      * @param tokenList token列表
      */
@@ -134,7 +133,9 @@ public class Parser {
             PL0Error.log(19);
         }
     }
-
+    /**
+     * 对write进行处理，生成对应语句
+     */
     private static void writeParser(ArrayList<Token> tokenList, ArrayList<Declaration> declarationList){
         Token left = getNext(tokenList);
         Token var = getNext(tokenList);
@@ -169,7 +170,8 @@ public class Parser {
             Token equals = getNext(tokenList);
             if (equals != null && equals.getSym().equals("SYM_:=")) {
                 expressionParser(tokenList, declarationList, declarationList.get(leftIndex));
-            } else if("SYM_++".equals(equals.getSym())||"SYM_--".equals(equals.getSym())){
+            }
+            else if("SYM_++".equals(equals.getSym())||"SYM_--".equals(equals.getSym())){
                 //处理自增和自减少（LOD 处理 STO）
                 Token end = getNext(tokenList);
                 Declaration declaration = declarationList.get(leftIndex);
@@ -183,6 +185,9 @@ public class Parser {
                 }else {
                     PL0Error.log(16);
                 }
+            }
+            else if("SYM_+=".equals(equals.getSym())||"SYM_-=".equals(equals.getSym())||"SYM_*=".equals(equals.getSym())||"SYM_/=".equals(equals.getSym())){
+                expressionParser2(tokenList,declarationList,declarationList.get(leftIndex));
             }
             else if (equals != null && !(equals.getSym().equals("SYM_,") || equals.getSym().equals("SYM_;"))) {
                 PL0Error.log(8);
@@ -229,6 +234,35 @@ public class Parser {
             // 如 x := 20;
             gen("LIT", "0", first.getNum());
             gen("STO", left.getLevel(), left.getAdr());
+        } else {
+            PL0Error.log(9);
+        }
+    }
+
+    /**
+     * 处理赋值时 := 的右半部分，即处理表达式（这里针对*=,+=这种）
+     * TODO：可简化代码
+     *
+     * @param tokenList       token列表
+     * @param declarationList 变量声明表
+     * @param left            := 的左半部分Token对应的Declaration
+     */
+    private static void expressionParser2(ArrayList<Token> tokenList, ArrayList<Declaration> declarationList, Declaration left) {
+        Token operator = tokenList.get(tokenListIndex);
+        Token first = getNext(tokenList);
+        int firstIndex = getItemIndexInDeclarationList(first, declarationList);
+        if (first != null && firstIndex != -1 && first.getSym().equals("IDENT")) {
+            if ("SYM_+=".equals(operator.getSym())) {
+                generateOperatorCode2(tokenList, declarationList, left, firstIndex, "2");
+            } else if ("SYM_-=".equals(operator.getSym())) {
+                generateOperatorCode2(tokenList, declarationList, left, firstIndex, "3");
+            } else if ("SYM_*=".equals(operator.getSym())) {
+                generateOperatorCode2(tokenList, declarationList, left, firstIndex, "4");
+            } else if ("SYM_/=".equals(operator.getSym())) {
+                generateOperatorCode2(tokenList, declarationList, left, firstIndex, "5");
+            } else {
+                PL0Error.log(10);
+            }
         } else {
             PL0Error.log(9);
         }
@@ -419,6 +453,23 @@ public class Parser {
         }
     }
 
+    /**
+     * 处理 *=,/*等值
+     * @param tokenList
+     * @param declarationList
+     * @param left
+     * @param firstIndex
+     * @param offset
+     */
+    private static void generateOperatorCode2(ArrayList<Token> tokenList, ArrayList<Declaration> declarationList, Declaration left, int firstIndex, String offset) {
+        Token end = getNext(tokenList);
+        if (end != null && end.getSym().equals("SYM_;")) {
+            gen("LOD", left.getLevel(), left.getAdr());
+            gen("LOD", declarationList.get(firstIndex).getLevel(), declarationList.get(firstIndex).getAdr());
+            gen("OPR", "0", offset);
+            gen("STO", left.getLevel(), left.getAdr());
+        }
+    }
     /**
      * 回填数组
      *

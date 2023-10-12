@@ -4,8 +4,8 @@ procedure p;
 var d;
 begin
     c:=b+a;
-    d:=c+c;
-    d--;
+    d:=100;
+    d/=c;
     write(c);
     write(d);
 end;
