@@ -12,7 +12,7 @@ import java.util.Scanner;
 public class ExecuteCode {
     private static final int MAX = 1000;
     private static int[] stack = new int[MAX];  // 执行栈
-    private static int top = 3;  // 栈顶元素位置
+    private static int top = -1;  // 栈顶元素位置
     private static int base = 0; // program, base, and top-stack register
     private static int programCounter = 0; // 程序计数器
     private static Scanner mySacnner = new Scanner(System.in);//用于读

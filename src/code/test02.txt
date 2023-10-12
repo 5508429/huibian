@@ -1,5 +1,4 @@
-const a:=10;
-var b,c;
+var a,b,c;
 
 procedure p;
 var d;
@@ -9,6 +8,7 @@ begin
 end;
 
 begin
+    a:=10;
     read(b);
     while b > 0 do
     begin

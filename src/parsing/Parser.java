@@ -4,6 +4,7 @@ import error.PL0Error;
 import lexical.Token;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 语句分析类，生成目标代码
@@ -28,10 +29,10 @@ public class Parser {
         for (Declaration declaration : declarationList) {
             if (declaration.getKind().equals("PROCEDURE")) {
                 level++;
-                //这个变量用来干什么？
+                //这个变量用来后面回填跳转的位置。
                 declaration.setCodeStartIndex(code.size());
                 //在栈中开辟3个数据单元
-                gen("INT", "0", "3");
+                gen("INT", "0", "VAR");
                 //传入token,declaration，以及PROCEDURE的token开始行和结束行
                 parse(tokenList, declarationList, declaration.getStart(), declaration.getEnd());
                 gen("OPR", "0", "0");
@@ -40,16 +41,38 @@ public class Parser {
         }
 
         filledCodeList("main", code.size() + "");  // 回填main函数指令
-        gen("INT", "0", "3");
+        gen("INT", "0", "MAINVAR");
         parse(tokenList, declarationList, declarationList.get(declarationList.size() - 1).getEnd(), tokenList.size());
         gen("OPR", "0", "0");
 
-        // 回填call中的所有函数地址
+        // 回填call和JMP中的所有函数地址
         for (Declaration declaration : declarationList) {
             if (declaration.getKind().equals("PROCEDURE")) {
                 filledCodeList(declaration.getName(), declaration.getCodeStartIndex() + "");
             }
         }
+        //动态开辟变量空间
+        List<Integer> list = new ArrayList<>();
+        int num = 0;
+        for(Declaration declaration:declarationList){
+            if(!"PROCEDURE".equals(declaration.getKind())){
+                num++;
+            }else {
+                list.add(num);
+                num = 0;
+            }
+        }
+        list.add(num);
+        num = 1;
+        for(Code code1:code){
+            if("VAR".equals(code1.getAddressOffset())){
+                code1.setAddressOffset(String.valueOf(3+list.get(num)));
+                num++;
+            }else if("MAINVAR".equals(code1.getAddressOffset())){
+                code1.setAddressOffset(String.valueOf(3+list.get(0)));
+            }
+        }
+
     }
 
     /**
