@@ -41,7 +41,7 @@ public class ExecuteCode {
                     break;
                 case "STO":
                     stack[calculateBase(base, levelDifference) + addressOffset] = stack[top];
-                    System.out.println(stack[top]);
+                    //System.out.println(stack[top]);
                     top--;
                     break;
                 case "CAL":
@@ -101,6 +101,7 @@ public class ExecuteCode {
      * 11: >
      * 12: >=
      * 13: read
+     * 14: write
      * @param code 中间代码
      */
     private static void handleOperator(Code code) {
@@ -147,6 +148,7 @@ public class ExecuteCode {
             case 8:
                 top--;
                 stack[top] = (stack[top] != stack[top + 1]) ? 1 : 0;
+                break;
             case 9:
                 top--;
                 stack[top] = (stack[top] < stack[top + 1]) ? 1 : 0;
@@ -154,6 +156,7 @@ public class ExecuteCode {
             case 10:
                 top--;
                 stack[top] = (stack[top] <= stack[top + 1]) ? 1 : 0;
+                break;
             case 11:
                 top--;
                 stack[top] = (stack[top] > stack[top + 1]) ? 1 : 0;
@@ -161,6 +164,7 @@ public class ExecuteCode {
             case 12:
                 top--;
                 stack[top] = (stack[top] >= stack[top + 1]) ? 1 : 0;
+                break;
             case 13:
                 System.out.println("请输入");
                 try{
@@ -168,6 +172,10 @@ public class ExecuteCode {
                 }catch (Exception e){
                     PL0Error.log(18);
                 }
+                break;
+            case 14:
+                System.out.println(stack[top--]);
+                break;
         }
     }
 }

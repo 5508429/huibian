@@ -103,6 +103,9 @@ public class Parser {
                 case "READSYM":
                     readParser(tokenList,declarationList);
                     break;
+                case "WRITESYM":
+                    writeParser(tokenList,declarationList);
+                    break;
 
             }
             tokenListIndex++;
@@ -123,6 +126,26 @@ public class Parser {
                 Declaration declaration = declarationList.get(index);
                 gen("OPR","0","13");
                 gen("STO",declaration.getLevel(),declaration.getAdr());
+
+            }else {
+                PL0Error.log(16);
+            }
+        }else {
+            PL0Error.log(19);
+        }
+    }
+
+    private static void writeParser(ArrayList<Token> tokenList, ArrayList<Declaration> declarationList){
+        Token left = getNext(tokenList);
+        Token var = getNext(tokenList);
+        Token right = getNext(tokenList);
+        Token end = getNext(tokenList);
+        if(left.getSym().equals("SYM_(")&&right.getSym().equals("SYM_)")){
+            if(end.getSym().equals("SYM_;")){
+                int index = getItemIndexInDeclarationList(var, declarationList);
+                Declaration declaration = declarationList.get(index);
+                gen("LOD",declaration.getLevel(),declaration.getAdr());
+                gen("OPR","0","14");
             }else {
                 PL0Error.log(16);
             }

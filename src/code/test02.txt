@@ -4,7 +4,9 @@ procedure p;
 var d;
 begin
     c:=b+a;
-    d:=c;
+    d:=c+c;
+    write(c);
+    write(d);
 end;
 
 begin
