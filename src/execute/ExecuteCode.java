@@ -104,6 +104,7 @@ public class ExecuteCode {
      * 14: write
      * 15: ++
      * 16: --
+     * 17:%
      * @param code 中间代码
      */
     private static void handleOperator(Code code) {
@@ -184,6 +185,9 @@ public class ExecuteCode {
             case 16:
                 stack[top]--;
                 break;
+            case 17:
+                top--;
+                stack[top]%=stack[top+1];
         }
     }
 }

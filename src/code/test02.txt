@@ -5,7 +5,7 @@ var d;
 begin
     c:=b+a;
     d:=100;
-    d/=c;
+    d:=d%c;
     write(c);
     write(d);
 end;

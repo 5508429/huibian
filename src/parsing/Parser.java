@@ -222,6 +222,9 @@ public class Parser {
             } else if (next != null && next.getSym().equals("SYM_/")) {
                 // 如 x := x / y
                 generateOperatorCode(tokenList, declarationList, left, firstIndex, "5");
+            } else if(next != null && next.getSym().equals("SYM_%")){
+                // 如 x := x%y
+                generateOperatorCode(tokenList, declarationList, left, firstIndex, "17");
             } else if (next != null && next.getSym().equals("SYM_;")) {
                 // 如 x := y;
                 gen("LOD", declarationList.get(firstIndex).getLevel(), declarationList.get(firstIndex).getAdr());
